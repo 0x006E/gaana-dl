@@ -2,4 +2,6 @@
 .vscode/ipch/24ca865565ea8876/main.ipch
 .vscode/tasks.json
 .vscode/launch.json
+.vscode
 main
+.vscode/c_cpp_properties.json

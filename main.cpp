@@ -1,11 +1,13 @@
 #include<iostream>
-#include<happyhttp.h>
+#include <fmt/format.h>
+#include<HappyHTTP/happyhttp.h>
+
 static int count=0;
 
 // invoked when response headers have been received
 void OnBegin( const happyhttp::Response* r, void* userdata )
 {
-    printf( "BEGIN (%d %s)\n", r->getstatus(), r->getreason() );
+    std::cout<<"BEGIN" << r->getstatus() << r->getreason() << endl;
     count = 0;
 }
 
