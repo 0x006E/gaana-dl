@@ -24,7 +24,8 @@ void OnComplete( const happyhttp::Response* r, void* userdata )
 }
 
 
-void TestGET()
+
+int main(int argc, char** agrv)
 {
     happyhttp::Connection conn( "www.scumways.com", 80 );
     conn.setcallbacks( OnBegin, OnData, OnComplete, 0 );
@@ -33,10 +34,5 @@ void TestGET()
 
     while( conn.outstanding() )
         conn.pump();
-}
-
-int main(int argc, char** agrv)
-{
-    TestGET();
     return 0;
 }
