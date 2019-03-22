@@ -1,13 +1,12 @@
-#include<iostream>
-#include <fmt/format.h>
-#include<HappyHTTP/happyhttp.h>
+#include "HappyHTTP/happyhttp.h"
+#include "fmt/include/fmt/printf.h"
 
 static int count=0;
 
 // invoked when response headers have been received
 void OnBegin( const happyhttp::Response* r, void* userdata )
 {
-    std::cout<<"BEGIN" << r->getstatus() << r->getreason() << endl;
+    fmt::printf( "BEGIN (%d %s)\n", r->getstatus(), r->getreason() );
     count = 0;
 }
 
@@ -21,7 +20,7 @@ void OnData( const happyhttp::Response* r, void* userdata, const unsigned char* 
 // invoked when response is complete
 void OnComplete( const happyhttp::Response* r, void* userdata )
 {
-    printf( "COMPLETE (%d bytes)\n", count );
+    fmt::printf( "COMPLETE (%d bytes)\n", count );
 }
 
 
@@ -34,4 +33,10 @@ void TestGET()
 
     while( conn.outstanding() )
         conn.pump();
+}
+
+int main(int argc, char** agrv)
+{
+    TestGET();
+    return 0;
 }

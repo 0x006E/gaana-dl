@@ -1,0 +1,7 @@
+cmake_minimum_required(VERSION 3.10.2)
+project (gaana-dl)
+set(CMAKE_BUILD_TYPE Debug)
+add_subdirectory(fmt)
+add_subdirectory(HappyHTTP)
+add_executable(gaana-dl main.cpp)
+target_link_libraries(gaana-dl fmt::fmt happyhttp)
