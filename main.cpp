@@ -5,9 +5,25 @@
 #include <rapidjson/document.h>
 #include <fstream>
 #include <clipp.h>
-#include <pbar/pbar.h>
+#include <thread>
+#include <chrono>
 
-int us = 100000;
+class progress {
+public:
+    void update(int num,int outOf, char s) 
+    {
+      std::string progString = "\rProgress: [";
+      int numChar = (num*cols)/outOf;
+      for(int loops=0;loops<numChar;loops++ )
+        progString+=s;
+      for(int loops=1;loops<(cols-numChar);loops++)
+        progString+=" ";
+      int percent = (num*100)/outOf;
+      std::cout << progString << "](" << percent << "%)" << std::flush;
+    }
+private:
+    int cols=60;
+};
 
 std::vector<std::string> tokenize(std::string sentence)
 {
@@ -50,24 +66,32 @@ for (unsigned int i = 0; i < MD5_STRING_SIZE; i++)
 return (hashToken + PHPSESSID.substr(3,6) + "=");
 }
 
+//std::vector<std::string> scapreMetadata(std::string response)
+void scapreMetadata(std::string response)
+{
+
+}
+
 int main(int argc, char** argv) {
-    int trackidArg = 0;
+    std::string gaanaURL = "";
     auto cli = (
-        clipp::required("-t", "--track-id") & clipp::value("Track ID", trackidArg)
+        clipp::required("-u", "--url") & clipp::value("URL for the gaana song", gaanaURL)
     );
     if(!parse(argc, argv, cli)) {std::cout << make_man_page(cli, argv[0]);return(0);}
     std::vector<std::string> streamUrl;
     cpr::Session session;
     cpr::Url URL;
-    URL = "https://www.gaana.com";
+    URL = gaanaURL;
     //session.SetProxies({{"http", "http://127.0.0.1:8080"}});
     session.SetUrl(URL);
     session.SetVerifySsl(cpr::VerifySsl{false});
-    auto Response = session.Get();
     std::cout << "Sending Request" << std::endl;
+    auto Response = session.Get();
+    scapreMetadata(Response.text);
     std::string PHPSESSID = Response.cookies["PHPSESSID"];
     std::cout << fmt::format("Got PHP Session ID : {0}",PHPSESSID) << std::endl;
     std::cout << "Generating HashToken" << std::endl;
+    int trackidArg=243233;
     std::string hashToken = generateHashToken(trackidArg, PHPSESSID);
     std::cout << fmt::format("Got HashToken : {0}",hashToken) << std::endl;
     std::cout << "Sending Request" << std::endl;
@@ -96,17 +120,22 @@ int main(int argc, char** argv) {
     std::cout << fmt::format("Got Response : \n{0}",Response.text) << std::endl;
     tokens = tokenize(Response.text);
     std::ofstream ts;
-    ts.open(fmt::format("/home/ntsv/songs/{0}.ts",trackidArg));
+    progress downBar;
     for(int i=0; i<tokens.size(); i++)
     {
         if(tokens[i][0]=='#')
             continue;
-        URL = tokens[i];
+        streamUrl.push_back(tokens[i]);
+    }
+    ts.open(fmt::format("/home/ntsv/songs/{0}.ts",trackidArg));
+    for(int i=1; i<=streamUrl.size(); i++){
+        URL = streamUrl[i];
         session.SetUrl(URL);
-        //std::cout << "\r" << i ;
-        
         auto stream = session.Get();
         ts << stream.text;
+        downBar.update(i,streamUrl.size(),'#');
+    }
     ts.close();
+    std::cout << std::endl;
     return 0;
 }
