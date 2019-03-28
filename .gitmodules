@@ -13,6 +13,3 @@
 [submodule "id3v2lib"]
 	path = id3v2lib
 	url = https://github.com/larsbs/id3v2lib
-[submodule "tinyxml2"]
-	path = tinyxml2
-	url = https://github.com/leethomason/tinyxml2

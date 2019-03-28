@@ -7,6 +7,7 @@
 #include <clipp.h>
 #include <thread>
 #include <chrono>
+#include <tinyxml2.h>
 
 class progress {
 public:
@@ -69,7 +70,12 @@ return (hashToken + PHPSESSID.substr(3,6) + "=");
 //std::vector<std::string> scapreMetadata(std::string response)
 void scapreMetadata(std::string response)
 {
-
+  const char* name = "";
+tinyxml2::XMLDocument doc;
+doc.Parse(response.c_str());
+tinyxml2::XMLElement* metaElement = doc.FirstChildElement( "meta" );
+metaElement->QueryStringAttribute("name",&name);
+std::cout << name << std::endl;
 }
 
 int main(int argc, char** argv) {
