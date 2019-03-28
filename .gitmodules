@@ -13,7 +13,3 @@
 [submodule "id3v2lib"]
 	path = id3v2lib
 	url = https://github.com/larsbs/id3v2lib
-
-[submodule "progressbar"]
-	path = progressbar
-	url = https://github.com/doches/progressbar
