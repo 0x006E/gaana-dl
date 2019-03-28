@@ -4,3 +4,15 @@
 [submodule "cpr"]
 	path = cpr
 	url = https://github.com/whoshuu/cpr.git
+[submodule "rapidjson"]
+	path = rapidjson
+	url = https://github.com/Tencent/rapidjson.git
+[submodule "clipp"]
+	path = clipp
+	url = https://github.com/muellan/clipp.git
+[submodule "id3v2lib"]
+	path = id3v2lib
+	url = https://github.com/larsbs/id3v2lib
+[submodule "pbar"]
+	path = pbar
+	url = https://github.com/Jvanrhijn/pbar
